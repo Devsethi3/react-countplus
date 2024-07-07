@@ -1,4 +1,3 @@
-markdown
 # react-countplus
 
 A flexible and customizable React component for animated number counting.
