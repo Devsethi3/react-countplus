@@ -1,1 +1,1 @@
-export * from "./components/CountUp";
+export * from "./components/CountPlus";

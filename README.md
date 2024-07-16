@@ -12,11 +12,11 @@ npm install react-countplus
 
 ## Usage
 
-Here's a basic example of how to use the `CountUp` component:
+Here's a basic example of how to use the `CountPlus` component:
 
 ```jsx
 import React from "react";
-import { CountUp } from "react-countplus";
+import { CountPlus } from "react-countplus";
 
 const App = () => {
   return (
