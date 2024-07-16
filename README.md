@@ -21,7 +21,6 @@ import { CountUp } from "react-countplus";
 const App = () => {
   return (
     <div>
-      <h1>Enhanced CountUp Component</h1>
       <CountUp
         end={1000}
         duration={5}
