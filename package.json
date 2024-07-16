@@ -1,6 +1,6 @@
 {
   "name": "react-countplus",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "",
   "type": "module",
   "main": "dist/index.js",
@@ -8,7 +8,17 @@
   "scripts": {
     "build": "npx rollup -c"
   },
-  "keywords": [],
+  "keywords": [
+    "react",
+    "counter",
+    "animation",
+    "countup",
+    "countdown",
+    "number",
+    "react-component",
+    "typescript",
+    "rollup"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {

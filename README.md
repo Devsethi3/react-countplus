@@ -21,7 +21,7 @@ import { CountPlus } from "react-countplus";
 const App = () => {
   return (
     <div>
-      <CountUp
+      <CountPlus
         end={1000}
         duration={5}
         prefix="$"
@@ -41,7 +41,7 @@ export default App;
 
 ## Props
 
-The `CountUp` component accepts the following props:
+The `CountPlus` component accepts the following props:
 
 | Prop Name        | Type     | Description                                                     | Default Value |
 | ---------------- | -------- | --------------------------------------------------------------- | ------------- |
