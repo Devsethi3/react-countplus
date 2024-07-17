@@ -1,77 +1,104 @@
 import * as React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 interface CountPlusProps {
-  end: number;
   start?: number;
+  end: number;
   duration?: number;
-  easingFunction?: (t: number) => number;
-  formatFunction?: (value: number) => string;
+  separator?: string;
+  decimals?: number;
+  decimal?: string;
   prefix?: string;
   suffix?: string;
-  separator?: string;
+  delay?: number;
   onStart?: () => void;
   onUpdate?: (value: number) => void;
-  onComplete?: () => void;
+  onEnd?: () => void;
 }
 
-const easeOutQuad = (t: number) => t * (2 - t);
+const easeOutQuad = (t: number): number => t * (2 - t);
 
 export const CountPlus: React.FC<CountPlusProps> = ({
-  end,
   start = 0,
-  duration = 2, // Default duration in seconds
-  easingFunction = easeOutQuad,
-  formatFunction = (value) => value.toString(),
+  end,
+  duration = 2,
+  separator = ",",
+  decimals = 0,
+  decimal = ".",
   prefix = "",
   suffix = "",
-  separator = ",",
+  delay = 0,
   onStart,
   onUpdate,
-  onComplete,
+  onEnd,
 }) => {
   const [count, setCount] = useState(start);
   const requestRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number | null>(null);
 
-  useEffect(() => {
-    if (onStart) onStart();
+  const formatNumber = useCallback(
+    (num: number): string => {
+      const fixedNum = Math.abs(num).toFixed(decimals);
+      const [intPart, decPart] = fixedNum.split(".");
+      const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+      const sign = num < 0 ? "-" : "";
+      let result = sign + formattedInt;
+      if (decimals > 0) {
+        result += decimal + decPart;
+      }
+      return prefix + result + suffix;
+    },
+    [prefix, suffix, separator, decimals, decimal]
+  );
 
-    let startTime: number | null = null;
-    const millisecondsDuration = duration * 1000; // Convert seconds to milliseconds
+  const animate = useCallback(
+    (time: number) => {
+      if (startTimeRef.current === null) {
+        startTimeRef.current = time;
+        if (onStart) onStart();
+      }
 
-    const animate = (time: number) => {
-      if (startTime === null) startTime = time;
-      const elapsed = time - startTime;
+      const elapsed = time - startTimeRef.current;
+      const millisecondsDuration = duration * 1000;
       const progress = Math.min(elapsed / millisecondsDuration, 1);
-      const easedProgress = easingFunction(progress);
+      const easedProgress = easeOutQuad(progress);
       const newCount = start + easedProgress * (end - start);
+
       setCount(newCount);
       if (onUpdate) onUpdate(newCount);
 
       if (progress < 1) {
         requestRef.current = requestAnimationFrame(animate);
       } else {
-        if (onComplete) onComplete();
+        setCount(end); // Ensure we end exactly on the target number
+        if (onEnd) onEnd();
       }
+    },
+    [start, end, duration, onStart, onUpdate, onEnd]
+  );
+
+  useEffect(() => {
+    const startAnimation = () => {
+      startTimeRef.current = null;
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      requestRef.current = requestAnimationFrame(animate);
     };
 
-    requestRef.current = requestAnimationFrame(animate);
+    if (delay > 0) {
+      const timeoutId = setTimeout(startAnimation, delay);
+      return () => clearTimeout(timeoutId);
+    } else {
+      startAnimation();
+    }
+
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
-  }, [start, end, duration, easingFunction, onStart, onUpdate, onComplete]);
-
-  // Format the count with separators
-  const formattedCount = formatFunction(count).replace(
-    /\B(?=(\d{3})+(?!\d))/g,
-    separator
-  );
+  }, [animate, delay]);
 
   return (
-    <span>
-      {prefix}
-      {formattedCount}
-      {suffix}
+    <span aria-live="polite" aria-atomic="true">
+      {formatNumber(count)}
     </span>
   );
 };

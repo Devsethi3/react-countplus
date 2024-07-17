@@ -1,5 +1,3 @@
-# react-countplus
-
 A flexible and customizable React component for animated number counting.
 
 ## Installation
@@ -22,15 +20,18 @@ const App = () => {
   return (
     <div>
       <CountPlus
-        end={1000}
-        duration={5}
-        prefix="$"
-        suffix=" USD"
-        separator=","
-        formatFunction={(value) => value.toFixed(2)}
+        start={0}
+        end={1249.23}
+        duration={2.5}
+        decimals={2}
+        prefix="EUR "
+        suffix=" left"
+        separator=" "
+        decimal=","
+        delay={500}
         onStart={() => console.log("Counting started!")}
         onUpdate={(value) => console.log("Current value:", value)}
-        onComplete={() => console.log("Counting completed!")}
+        onEnd={() => console.log("Counting completed!")}
       />
     </div>
   );
@@ -43,28 +44,30 @@ export default App;
 
 The `CountPlus` component accepts the following props:
 
-| Prop Name        | Type     | Description                                                     | Default Value |
-| ---------------- | -------- | --------------------------------------------------------------- | ------------- |
-| `end`            | number   | The final number to count up to (required)                      | -             |
-| `start`          | number   | The number to start counting from                               | 0             |
-| `duration`       | number   | Duration of the count animation in seconds                      | 2             |
-| `easingFunction` | function | Custom easing function for the animation                        | easeOutQuad   |
-| `formatFunction` | function | Custom function to format the displayed number                  | toString      |
-| `prefix`         | string   | String to display before the number                             | ""            |
-| `suffix`         | string   | String to display after the number                              | ""            |
-| `separator`      | string   | Character used as the thousands separator                       | ","           |
-| `onStart`        | function | Callback function called when the animation starts              | -             |
-| `onUpdate`       | function | Callback function called on each update with the current value  | -             |
-| `onComplete`     | function | Callback function called when the animation completes           | -             |
+| Prop Name   | Type     | Description                                                    | Default Value |
+|-------------|----------|----------------------------------------------------------------|---------------|
+| `start`     | number   | The number to start counting from                              | 0             |
+| `end`       | number   | The final number to count up to (required)                     | -             |
+| `duration`  | number   | Duration of the count animation in seconds                     | 2             |
+| `decimals`  | number   | Number of decimal places to show                               | 0             |
+| `separator` | string   | Character used as the thousands separator                      | ","           |
+| `decimal`   | string   | Character used as the decimal point                            | "."           |
+| `prefix`    | string   | String to display before the number                            | ""            |
+| `suffix`    | string   | String to display after the number                             | ""            |
+| `delay`     | number   | Delay in milliseconds before starting the animation            | 0             |
+| `onStart`   | function | Callback function called when the animation starts             | -             |
+| `onUpdate`  | function | Callback function called on each update with the current value | -             |
+| `onEnd`     | function | Callback function called when the animation completes          | -             |
 
 ## Features
 
 - Smooth counting animation
 - Customizable duration and easing
+- Support for decimal numbers
 - Prefix and suffix support
-- Thousand separator
-- Custom formatting function
-- Start, update, and complete callbacks
+- Customizable thousand separator and decimal point
+- Delay option for starting the animation
+- Start, update, and end callbacks
 
 ## License
 
