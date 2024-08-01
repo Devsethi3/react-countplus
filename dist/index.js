@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { useState, useRef, useCallback, useEffect } from 'react';
 
-const easeOutQuad = (t) => t * (2 - t);
+const easeOutExpo = (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
 const CountPlus = ({ start = 0, end, duration = 2, separator = ",", decimals = 0, decimal = ".", prefix = "", suffix = "", delay = 0, onStart, onUpdate, onEnd, }) => {
     const [count, setCount] = useState(start);
     const requestRef = useRef(null);
     const startTimeRef = useRef(null);
+    const previousTimeRef = useRef(null);
     const formatNumber = useCallback((num) => {
         const fixedNum = Math.abs(num).toFixed(decimals);
         const [intPart, decPart] = fixedNum.split(".");
@@ -20,14 +21,22 @@ const CountPlus = ({ start = 0, end, duration = 2, separator = ",", decimals = 0
     const animate = useCallback((time) => {
         if (startTimeRef.current === null) {
             startTimeRef.current = time;
+            previousTimeRef.current = time;
             if (onStart)
                 onStart();
         }
         const elapsed = time - startTimeRef.current;
+        previousTimeRef.current
+            ? time - previousTimeRef.current
+            : 0;
+        previousTimeRef.current = time;
         const millisecondsDuration = duration * 1000;
         const progress = Math.min(elapsed / millisecondsDuration, 1);
-        const easedProgress = easeOutQuad(progress);
-        const newCount = start + easedProgress * (end - start);
+        // Apply easing function with extra slowdown near the end
+        const easedProgress = easeOutExpo(progress);
+        const slowdownFactor = 1 - Math.pow(1 - progress, 3); // Additional slowdown
+        const adjustedProgress = easedProgress * slowdownFactor + progress * (1 - slowdownFactor);
+        const newCount = start + adjustedProgress * (end - start);
         setCount(newCount);
         if (onUpdate)
             onUpdate(newCount);
@@ -43,6 +52,7 @@ const CountPlus = ({ start = 0, end, duration = 2, separator = ",", decimals = 0
     useEffect(() => {
         const startAnimation = () => {
             startTimeRef.current = null;
+            previousTimeRef.current = null;
             if (requestRef.current)
                 cancelAnimationFrame(requestRef.current);
             requestRef.current = requestAnimationFrame(animate);

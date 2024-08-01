@@ -13,26 +13,35 @@ npm install react-countplus
 Here's a basic example of how to use the `CountPlus` component:
 
 ```jsx
-import React from "react";
+import { useState } from "react";
 import { CountPlus } from "react-countplus";
 
 const App = () => {
+  const [key, setKey] = useState(0);
+
+  const handleRestart = () => {
+    setKey((prevKey) => prevKey + 1);
+  };
   return (
-    <div>
-      <CountPlus
-        start={0}
-        end={1249.23}
-        duration={2.5}
-        decimals={2}
-        prefix="EUR "
-        suffix=" left"
-        separator=" "
-        decimal=","
-        delay={500}
-        onStart={() => console.log("Counting started!")}
-        onUpdate={(value) => console.log("Current value:", value)}
-        onEnd={() => console.log("Counting completed!")}
-      />
+    <div style={{ textAlign: "center", padding: "50px" }}>
+      <h1>CountPlus Demo</h1>
+      <div style={{ fontSize: "48px", marginBottom: "20px" }}>
+        <CountPlus
+          key={key}
+          start={0}
+          end={1000}
+          duration={5}
+          separator=","
+          decimals={2}
+          decimal="."
+          prefix="$"
+          suffix=" USD"
+          onStart={() => console.log("Animation started")}
+          onUpdate={(value) => console.log("Current value:", value)}
+          onEnd={() => console.log("Animation ended")}
+        />
+      </div>
+      <button onClick={handleRestart}>Restart Animation</button>
     </div>
   );
 };
@@ -45,7 +54,7 @@ export default App;
 The `CountPlus` component accepts the following props:
 
 | Prop Name   | Type     | Description                                                    | Default Value |
-|-------------|----------|----------------------------------------------------------------|---------------|
+| ----------- | -------- | -------------------------------------------------------------- | ------------- |
 | `start`     | number   | The number to start counting from                              | 0             |
 | `end`       | number   | The final number to count up to (required)                     | -             |
 | `duration`  | number   | Duration of the count animation in seconds                     | 2             |
