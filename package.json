@@ -1,6 +1,6 @@
 {
-  "name": "react-countplus",
-  "version": "2.0.1",
+  "name": "react-lazy-load",
+  "version": "1.0.1",
   "description": "",
   "type": "module",
   "main": "dist/index.js",
@@ -10,11 +10,6 @@
   },
   "keywords": [
     "react",
-    "counter",
-    "animation",
-    "countup",
-    "countdown",
-    "number",
     "react-component",
     "typescript",
     "rollup"
@@ -37,10 +32,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Devsethi3/react-countplus.git"
+    "url": "https://github.com/Devsethi3/react-lazy-load.git"
   },
   "bugs": {
-    "url": "https://github.com/Devsethi3/react-countplus/issues"
+    "url": "https://github.com/Devsethi3/react-lazy-load/issues"
   },
-  "homepage": "https://github.com/Devsethi3/react-countplus#readme"
+  "homepage": "https://github.com/Devsethi3/react-lazy-load#readme"
 }
